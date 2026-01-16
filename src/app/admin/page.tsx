@@ -127,7 +127,7 @@ export default function Admin() {
 		}
 	}, [newProduct.price]);
 
-	const [isBigImageOpen, setIsBigImageOpen] = useState(false);
+	const [isActiveImage, setIsActiveImage] = useState<number | null>(null);
 
 	return (
 		<div className="flex flex-col p-4 items-center w-full min-h-dvh">
@@ -215,14 +215,14 @@ export default function Admin() {
 												sizes="w-24 h-auto"
 												className="object-contain cursor-pointer"
 												loading="eager"
-												onClick={() => setIsBigImageOpen(true)}
+												onClick={() => setIsActiveImage(product.id)}
 											/>
 										</div>
 
-										{isBigImageOpen && (
+										{isActiveImage === product.id && (
 											<div
 												className="fixed top-0 left-0 w-full min-h-dvh p-2 z-10 bg-black/60"
-												onClick={() => setIsBigImageOpen(false)}>
+												onClick={() => setIsActiveImage(null)}>
 												<Image
 													src={products.find((p) => p.id === product.id)!.imageUrl}
 													alt={product.name}
