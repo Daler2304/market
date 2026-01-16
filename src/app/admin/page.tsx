@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 
 interface Product {
 	id: number;
@@ -103,6 +103,32 @@ export default function Admin() {
 		});
 	};
 
+	// if user enters to salePersent more than 100, set it to 100
+	useEffect(() => {
+		if (newProduct.salePersent > 99) {
+			setNewProduct((prev) => ({
+				...prev,
+				salePersent: 99,
+			}));
+		} else if (newProduct.salePersent < 0) {
+			setNewProduct((prev) => ({
+				...prev,
+				salePersent: 0,
+			}));
+		}
+	}, [newProduct.salePersent]);
+
+	useEffect(() => {
+		if (newProduct.price < 0) {
+			setNewProduct((prev) => ({
+				...prev,
+				price: 0,
+			}));
+		}
+	}, [newProduct.price]);
+
+	const [isBigImageOpen, setIsBigImageOpen] = useState(false);
+
 	return (
 		<div className="flex flex-col p-4 items-center w-full min-h-dvh">
 			<h1 className="text-2xl font-bold">Admin Page</h1>
@@ -179,7 +205,7 @@ export default function Admin() {
 						products.map((product) => (
 							<div key={product.id} className="border border-gray-300 rounded-md p-2">
 								<div className="flex flex-row gap-1 h-full w-full justify-between">
-									<div className="flex flex-row w-full ">
+									<div className="flex flex-row w-full">
 										{/* Image container */}
 										<div className="relative w-24 aspect-3/4 overflow-hidden flex items-center justify-center">
 											<Image
@@ -187,10 +213,25 @@ export default function Admin() {
 												alt={product.name}
 												fill
 												sizes="w-24 h-auto"
-												className="object-contain"
+												className="object-contain cursor-pointer"
 												loading="eager"
+												onClick={() => setIsBigImageOpen(true)}
 											/>
 										</div>
+
+										{isBigImageOpen && (
+											<div
+												className="fixed top-0 left-0 w-full min-h-dvh p-2 z-10 bg-black/60"
+												onClick={() => setIsBigImageOpen(false)}>
+												<Image
+													src={products.find((p) => p.id === product.id)!.imageUrl}
+													alt={product.name}
+													fill
+													sizes="w-30 h-auto"
+													className="object-contain cover p-10"
+												/>
+											</div>
+										)}
 
 										{/* Product info container */}
 										<div className="flex flex-col w-full p-1">
@@ -199,6 +240,9 @@ export default function Admin() {
 											</div>
 											<div className="w-50">
 												<i className="text-[12px] line-clamp-1">{product.description}</i>
+											</div>
+											<div>
+												<p className="text-xs">ID: {product.id}</p>
 											</div>
 											<div className="flex">
 												<p>
@@ -209,7 +253,13 @@ export default function Admin() {
 														)}{" "}
 														₽
 													</span>{" "}
-													<span className="text-gray-400 line-through">{product.price} ₽</span>
+													{Math.round(
+														product.price - (product.price * product.salePersent) / 100
+													) !== product.price && (
+														<span className="text-gray-400 line-through">
+															{product.price} ₽
+														</span>
+													)}
 												</p>
 											</div>
 										</div>
