@@ -7,12 +7,12 @@ import { HiSquares2X2 } from "react-icons/hi2";
 import { CiSearch } from "react-icons/ci";
 import { FaUser } from "react-icons/fa6";
 import { BsBoxSeamFill } from "react-icons/bs";
-import { MdOutlineFavorite } from "react-icons/md";
+import { BsHeartFill } from "react-icons/bs";
 import { FaShoppingBasket } from "react-icons/fa";
 
 const userActions = [
 	{ name: "Заказы", icon: BsBoxSeamFill, url: "/orders" },
-	{ name: "Избранное", icon: MdOutlineFavorite, url: "/favorites" },
+	{ name: "Избранное", icon: BsHeartFill, url: "/favorites" },
 	{ name: "Корзина", icon: FaShoppingBasket, url: "/cart" },
 ];
 
@@ -27,7 +27,7 @@ export default function Header() {
 	const [search, setSearch] = useState("");
 
 	return (
-		<header className="grid grid-cols-[1fr_1fr_6fr_2.5fr] gap-4 max-h-max p-0.5">
+		<header className="grid grid-cols-[1fr_1fr_6fr_2.5fr] gap-4  p-0.5">
 			{/* LOGO */}
 			<div className="flex items-center w-max">
 				<div className="relative w-32.5 h-full">
